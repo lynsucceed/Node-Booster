@@ -20,3 +20,9 @@ You can test out the WIP, being the last commit.
 Stick to your version from project end to finish. 
 It is **not** advised to update blender or plugins versions midproject!
 Always keep track of which version of blender/addons you used for a project. 
+
+Math Expression Add New Function
+1. Add Exp Function ：e^x
+2. Add Sigmoid Function ：1 / (1 + e^-x)
+3. Add Relu Function ：max(0,x)
+

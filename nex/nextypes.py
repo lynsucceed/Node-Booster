@@ -168,7 +168,7 @@ def NexFactory(NODEINSTANCE, ALLINPUTS=[], ALLOUTPUTS=[], CALLHISTORY=[],):
                 # Name conflict with some native functions? If no NexType foud, we simply call builtin function
                 match fname:
 
-                    case 'cos'|'sin'|'tan'|'acos'|'asin'|'atan'|'cosh'|'sinh'|'tanh'|'sqrt'|'log'|'degrees'|'radians'|'floor'|'ceil'|'trunc':
+                    case 'cos'|'sin'|'tan'|'acos'|'asin'|'atan'|'cosh'|'sinh'|'tanh'|'sqrt'|'log'|'exp'|'sigmoid'|'relu'|'degrees'|'radians'|'floor'|'ceil'|'trunc':
                         if not any(('Nex' in type(v).__name__) for v in values):
                             mathfunction = getattr(math,fname)
                             return mathfunction(*args, **kwargs)

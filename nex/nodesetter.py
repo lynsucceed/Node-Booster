@@ -1092,6 +1092,7 @@ def generalcombsepa(ng, callhistory,
     nodetype = node_types[operation_type][data_type]
     nameid = prefix_names[operation_type][data_type]
     uniquename = get_unique_name(nameid, callhistory)
+    node = None
     needs_linking = False
 
     if (uniquename):
@@ -1556,6 +1557,42 @@ def log(ng, callhistory,
     return generalfloatmath(ng,callhistory,'LOGARITHM',a,n)
 
 @user_domain('mathex','nexscript')
+@user_doc(mathex="Exponential e^A.")
+@user_doc(nexscript="Exponential e^A.\nSupports SocketFloat and entry-wise SocketVector if input is float compatible.")
+@user_overseer()
+def exp(ng, callhistory,
+    a:sFlo|sInt|sBoo|sVec|sVecXYZ|sVecT|Vector,
+    ) -> sFlo|sVec:
+    # 如果是向量，逐元素处理
+    if containsVecs(a):
+        return generalentryfloatmath(ng, callhistory, 'VECTORXYZ', 'EXPONENT', 2.718281828, a)
+    # 标量直接创建 Math 节点
+    return generalfloatmath(ng, callhistory, 'EXPONENT', 2.718281828, a)
+
+@user_domain('mathex','nexscript')
+@user_doc(mathex="Sigmoid 1/(1+e^-x).")
+@user_doc(nexscript="Sigmoid function.\nSupports SocketFloat and entry-wise SocketVector.")
+@user_overseer()
+def sigmoid(ng, callhistory,
+    x:sFlo|sInt|sVec|sVecXYZ|sVecT|Vector,
+    ) -> sFlo|sVec:
+    # sigmoid(x) = 1 / (1 + e^-x)
+    neg_x = generalfloatmath(ng, callhistory, 'MULTIPLY', x, -1.0)
+    exp_negx = exp(ng, callhistory, neg_x)
+    denom   = generalfloatmath(ng, callhistory, 'ADD', 1.0, exp_negx)
+    return generalfloatmath(ng, callhistory, 'DIVIDE', 1.0, denom)
+
+@user_domain('mathex','nexscript')
+@user_doc(mathex="ReLU max(0,x).")
+@user_doc(nexscript="ReLU function.\nSupports SocketFloat and entry-wise SocketVector.")
+@user_overseer()
+def relu(ng, callhistory,
+    x:sFlo|sInt|sVec|sVecXYZ|sVecT|Vector,
+    ) -> sFlo|sVec:
+    # ReLU(x) = MAX(0, x)
+    return generalfloatmath(ng, callhistory, 'MAXIMUM', 0.0, x)
+
+@user_domain('mathex','nexscript')
 @user_doc(mathex="Square Root of A.")
 @user_doc(nexscript="Square Root of A.\nSupports SocketFloat and entry-wise SocketVector.")
 @user_overseer()
@@ -2010,7 +2047,7 @@ def sepaxyz(ng, callhistory,
         vA = Vector((vA,vA,vA))
     return generalcombsepa(ng,callhistory,'SEPARATE','VECTORXYZ',vA)
 
-@user_domain('nexscript')
+@user_domain('mathex','nexscript')
 @user_doc(nexscript="Combine Vector.\nCombine 3 XYZ SocketFloat, SocketInt or SocketBool into a SocketVector.")
 @user_overseer()
 def combixyz(ng, callhistory,

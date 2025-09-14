@@ -25,9 +25,9 @@ class NODEBOOSTER_PR_Window(bpy.types.PropertyGroup):
         if (self.minimap_modal_operator_is_active):
             wm = context.window_manager
             for win in wm.windows:
-                if ((win) and (win.screen) and (not win.screen.is_temporary) and (context.temp_override)):
-                    with context.temp_override(window=win, screen=win.screen):
-                        bpy.ops.nodebooster.minimap_interaction('INVOKE_DEFAULT',) #modal are tied per windows.
+                with context.temp_override(window=win, screen=win.screen):
+                    bpy.ops.nodebooster.minimap_interaction('INVOKE_DEFAULT',) #modal are tied per windows.
+
         return None
 
     minimap_modal_operator_is_active : bpy.props.BoolProperty(
